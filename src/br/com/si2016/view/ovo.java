@@ -11,4 +11,5 @@ package br.com.si2016.view;
  */
 public class ovo {
     public String ovo;
+    public String idade;
 }
