@@ -9,7 +9,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -30,12 +33,12 @@ import org.opencv.objdetect.CascadeClassifier;
 public class FaceDetection extends javax.swing.JFrame {
 
     private DaemonThread myThread = null;
-    int count = 0;
-    VideoCapture webSource = null;
-    Mat frame = new Mat();
-    MatOfByte mem = new MatOfByte();
-    CascadeClassifier faceDetector = new CascadeClassifier(FaceDetection.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1));
-    MatOfRect faceDetections = new MatOfRect();
+    protected int count = 0;
+    public VideoCapture webSource = null;
+    public Mat frame = new Mat();
+    public MatOfByte mem = new MatOfByte();
+    public CascadeClassifier faceDetector = new CascadeClassifier(FaceDetection.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1));
+    public MatOfRect faceDetections = new MatOfRect();
     
     /**
      * Creates new form FaceDetection
@@ -58,9 +61,9 @@ public class FaceDetection extends javax.swing.JFrame {
                             Graphics g = panelPhoto.getGraphics();
                             faceDetector.detectMultiScale(frame, faceDetections);
                             for (Rect rect : faceDetections.toArray()) {
-                               // System.out.println("ttt");
-                                Core.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
-                                        new Scalar(0, 255,0));
+                                count += 1;
+                                //Core.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
+                                  //      new Scalar(0, 255,0));
                             }
                             Highgui.imencode(".bmp", frame, mem);
                             System.out.println(Highgui.imencode(".bmp", frame, mem));
@@ -91,9 +94,11 @@ public class FaceDetection extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFileChooser1 = new javax.swing.JFileChooser();
         panelPhoto = new javax.swing.JPanel();
-        btnSavePhoto = new javax.swing.JButton();
-        btnStopPhoto = new javax.swing.JButton();
+        btn_startCapture = new javax.swing.JButton();
+        btn_stopCapture = new javax.swing.JButton();
+        btn_takePicture = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,24 +106,31 @@ public class FaceDetection extends javax.swing.JFrame {
         panelPhoto.setLayout(panelPhotoLayout);
         panelPhotoLayout.setHorizontalGroup(
             panelPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 691, Short.MAX_VALUE)
         );
         panelPhotoLayout.setVerticalGroup(
             panelPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 430, Short.MAX_VALUE)
+            .addGap(0, 435, Short.MAX_VALUE)
         );
 
-        btnSavePhoto.setText("start");
-        btnSavePhoto.addActionListener(new java.awt.event.ActionListener() {
+        btn_startCapture.setText("start");
+        btn_startCapture.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSavePhotoActionPerformed(evt);
+                btn_startCaptureActionPerformed(evt);
             }
         });
 
-        btnStopPhoto.setText("stop");
-        btnStopPhoto.addActionListener(new java.awt.event.ActionListener() {
+        btn_stopCapture.setText("stop");
+        btn_stopCapture.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStopPhotoActionPerformed(evt);
+                btn_stopCaptureActionPerformed(evt);
+            }
+        });
+
+        btn_takePicture.setText("Tirar Foto");
+        btn_takePicture.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_takePictureActionPerformed(evt);
             }
         });
 
@@ -132,45 +144,64 @@ public class FaceDetection extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(216, 216, 216)
-                .addComponent(btnSavePhoto)
-                .addGap(120, 120, 120)
-                .addComponent(btnStopPhoto)
-                .addContainerGap(267, Short.MAX_VALUE))
+                .addComponent(btn_startCapture)
+                .addGap(52, 52, 52)
+                .addComponent(btn_stopCapture)
+                .addGap(57, 57, 57)
+                .addComponent(btn_takePicture)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSavePhoto)
-                    .addComponent(btnStopPhoto))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_startCapture)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_stopCapture)
+                        .addComponent(btn_takePicture)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSavePhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSavePhotoActionPerformed
+    private void btn_startCaptureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_startCaptureActionPerformed
         webSource = new VideoCapture(0); // video capture from default cam
         myThread = new DaemonThread(); //create object of threat class 
         Thread t = new Thread(myThread);
         t.setDaemon(true);
         myThread.runnable = true;
         t.start();                 //start thrad
-        btnSavePhoto.setEnabled(false);  // deactivate start button
-        btnStopPhoto.setEnabled(true);  //  activate stop button
+        btn_startCapture.setEnabled(false);  // deactivate start button
+        btn_stopCapture.setEnabled(true);  //  activate stop button
 
-    }//GEN-LAST:event_btnSavePhotoActionPerformed
+    }//GEN-LAST:event_btn_startCaptureActionPerformed
 
-    private void btnStopPhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopPhotoActionPerformed
+    private void btn_stopCaptureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopCaptureActionPerformed
         myThread.runnable = false;            // stop thread
-        btnStopPhoto.setEnabled(false);   // activate start button 
-        btnSavePhoto.setEnabled(true);     // deactivate stop button
+        btn_stopCapture.setEnabled(false);   // activate start button 
+        btn_startCapture.setEnabled(true);     // deactivate stop button
 
         webSource.release();  // stop caturing fron cam
-    }//GEN-LAST:event_btnStopPhotoActionPerformed
+    }//GEN-LAST:event_btn_stopCaptureActionPerformed
+
+    private void btn_takePictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_takePictureActionPerformed
+        if(count > 5){
+            System.out.println(count);
+            int returnVal = jFileChooser1.showSaveDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = jFileChooser1.getSelectedFile();
+            Highgui.imwrite(file.getPath(), frame);
+            } else {
+                System.out.println("File access cancelled by user.");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Por favor, se posicione corretamente para tirar a foto.", "ERRO", 0);
+        }
+    }//GEN-LAST:event_btn_takePictureActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,8 +240,10 @@ public class FaceDetection extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSavePhoto;
-    private javax.swing.JButton btnStopPhoto;
+    private javax.swing.JButton btn_startCapture;
+    private javax.swing.JButton btn_stopCapture;
+    private javax.swing.JButton btn_takePicture;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JPanel panelPhoto;
     // End of variables declaration//GEN-END:variables
 }
