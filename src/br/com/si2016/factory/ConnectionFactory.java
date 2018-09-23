@@ -41,4 +41,17 @@ public class ConnectionFactory {
         }
         return null;
     }
+    
+    /* 
+        CREATE TABLE `exemplo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) DEFAULT NULL,
+  `cpf` varchar(15) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `telefone` varchar(20) DEFAULT NULL,
+  `imagem` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+    
+    */
 }
