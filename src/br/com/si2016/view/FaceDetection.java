@@ -5,15 +5,21 @@
  */
 package br.com.si2016.view;
 
+import br.com.si2016.DAO.UsuarioDAO;
+import br.com.si2016.models.Usuario;
+import br.com.si2016.util.ManipularImagem;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import org.opencv.core.Core;
+/*import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfRect;
@@ -25,6 +31,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+*/
 
 /**
  *
@@ -34,11 +41,12 @@ public class FaceDetection extends javax.swing.JFrame {
 
     private DaemonThread myThread = null;
     protected int count = 0;
-    public VideoCapture webSource = null;
-    public Mat frame = new Mat();
-    public MatOfByte mem = new MatOfByte();
-    public CascadeClassifier faceDetector = new CascadeClassifier(FaceDetection.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1));
-    public MatOfRect faceDetections = new MatOfRect();
+//    public VideoCapture webSource = null;
+//    public Mat frame = new Mat();
+//    public MatOfByte mem = new MatOfByte();
+//    public CascadeClassifier faceDetector = new CascadeClassifier(FaceDetection.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1));
+//    public MatOfRect faceDetections = new MatOfRect();
+    private BufferedImage imagem;
     
     /**
      * Creates new form FaceDetection
@@ -55,31 +63,31 @@ public class FaceDetection extends javax.swing.JFrame {
         public void run() {
             synchronized (this) {
                 while (runnable) {
-                    if (webSource.grab()) {
-                        try {
-                            webSource.retrieve(frame);
-                            Graphics g = panelPhoto.getGraphics();
-                            faceDetector.detectMultiScale(frame, faceDetections);
-                            for (Rect rect : faceDetections.toArray()) {
-                                count += 1;
-                                //Core.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
-                                  //      new Scalar(0, 255,0));
-                            }
-                            Highgui.imencode(".bmp", frame, mem);
-                            System.out.println(Highgui.imencode(".bmp", frame, mem));
-                            Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
-                            BufferedImage buff = (BufferedImage) im;
-                            if (g.drawImage(buff, 0, 0, getWidth(), getHeight()-150 , 0, 0, buff.getWidth(), buff.getHeight(), null)) {
-                                if (runnable == false) {
-                                    System.out.println("Paused ..... ");
-                                    this.wait();
-                                }
-                            }
-                        } catch (Exception ex) {
-                            System.out.println("Error!!");
-                            ex.printStackTrace();
-                        }
-                    }
+//                    if (webSource.grab()) {
+//                        try {
+//                            webSource.retrieve(frame);
+//                            Graphics g = panelPhoto.getGraphics();
+//                            faceDetector.detectMultiScale(frame, faceDetections);
+//                            for (Rect rect : faceDetections.toArray()) {
+//                                count += 1;
+//                                //Core.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
+//                                  //      new Scalar(0, 255,0));
+//                            }
+//                            Highgui.imencode(".bmp", frame, mem);
+//                            System.out.println(Highgui.imencode(".bmp", frame, mem));
+//                            Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
+//                            BufferedImage buff = (BufferedImage) im;
+//                            if (g.drawImage(buff, 0, 0, getWidth(), getHeight()-150 , 0, 0, buff.getWidth(), buff.getHeight(), null)) {
+//                                if (runnable == false) {
+//                                    System.out.println("Paused ..... ");
+//                                    this.wait();
+//                                }
+//                            }
+//                        } catch (Exception ex) {
+//                            System.out.println("Error!!");
+//                            ex.printStackTrace();
+//                        }
+//                    }
                 }
             }
         }
@@ -99,6 +107,17 @@ public class FaceDetection extends javax.swing.JFrame {
         btn_startCapture = new javax.swing.JButton();
         btn_stopCapture = new javax.swing.JButton();
         btn_takePicture = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtnome = new javax.swing.JTextField();
+        txtemail = new javax.swing.JTextField();
+        txtcpf = new javax.swing.JTextField();
+        txttelefone = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        lblImagem = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,11 +125,11 @@ public class FaceDetection extends javax.swing.JFrame {
         panelPhoto.setLayout(panelPhotoLayout);
         panelPhotoLayout.setHorizontalGroup(
             panelPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 691, Short.MAX_VALUE)
+            .addGap(0, 447, Short.MAX_VALUE)
         );
         panelPhotoLayout.setVerticalGroup(
             panelPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 435, Short.MAX_VALUE)
+            .addGap(0, 287, Short.MAX_VALUE)
         );
 
         btn_startCapture.setText("start");
@@ -134,42 +153,111 @@ public class FaceDetection extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Nome");
+
+        jLabel2.setText("CPF");
+
+        jLabel3.setText("Email");
+
+        jLabel5.setText("Telefone");
+
+        jButton1.setText("Salvar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Upload Imagem");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(136, Short.MAX_VALUE)
+                .addComponent(panelPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(132, 132, 132))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(216, 216, 216)
+                .addGap(34, 34, 34)
                 .addComponent(btn_startCapture)
-                .addGap(52, 52, 52)
+                .addGap(26, 26, 26)
                 .addComponent(btn_stopCapture)
-                .addGap(57, 57, 57)
+                .addGap(29, 29, 29)
                 .addComponent(btn_takePicture)
+                .addGap(38, 38, 38)
+                .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5))
+                .addGap(84, 84, 84)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(txtnome, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                        .addComponent(txtcpf, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                        .addComponent(txtemail, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                        .addComponent(txttelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addComponent(lblImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(41, 41, 41)
+                .addComponent(panelPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_startCapture)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_stopCapture)
-                        .addComponent(btn_takePicture)))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)
+                                .addGap(13, 13, 13)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel5))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(txtnome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtcpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8)
+                                .addComponent(txtemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txttelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_stopCapture)
+                            .addComponent(btn_takePicture)
+                            .addComponent(jButton1)
+                            .addComponent(btn_startCapture))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(lblImagem, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_startCaptureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_startCaptureActionPerformed
-        webSource = new VideoCapture(0); // video capture from default cam
+//        webSource = new VideoCapture(0); // video capture from default cam
         myThread = new DaemonThread(); //create object of threat class 
         Thread t = new Thread(myThread);
         t.setDaemon(true);
@@ -185,7 +273,7 @@ public class FaceDetection extends javax.swing.JFrame {
         btn_stopCapture.setEnabled(false);   // activate start button 
         btn_startCapture.setEnabled(true);     // deactivate stop button
 
-        webSource.release();  // stop caturing fron cam
+//        webSource.release();  // stop caturing fron cam
     }//GEN-LAST:event_btn_stopCaptureActionPerformed
 
     private void btn_takePictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_takePictureActionPerformed
@@ -194,7 +282,7 @@ public class FaceDetection extends javax.swing.JFrame {
             int returnVal = jFileChooser1.showSaveDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooser1.getSelectedFile();
-            Highgui.imwrite(file.getPath(), frame);
+//            Highgui.imwrite(file.getPath(), frame);
             } else {
                 System.out.println("File access cancelled by user.");
             }
@@ -203,11 +291,58 @@ public class FaceDetection extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_takePictureActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+             Usuario obj = new Usuario();
+             obj.setNome(txtnome.getText());
+             obj.setCpf(txtcpf.getText());
+             obj.setEmail(txtemail.getText());
+             obj.setTelefone(txttelefone.getText());
+             obj.setImagem(ManipularImagem.getImgBytes(imagem));
+             UsuarioDAO dao = new UsuarioDAO();
+             Boolean foi = dao.inserir(obj);
+             if(foi)
+             {
+                 JOptionPane.showMessageDialog(rootPane, "Imagem enviada com sucesso");
+         
+             }
+             else
+             {
+                JOptionPane.showMessageDialog(rootPane, "Imagem não enviada");
+         
+             }
+             
+             } catch (Exception ex) {
+//             Logger.getLogger(EnviarImagem.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         JFileChooser fc = new JFileChooser();
+        int res = fc.showOpenDialog(null);
+
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File arquivo = fc.getSelectedFile();
+
+            try {
+                imagem = ManipularImagem.setImagemDimensao(arquivo.getAbsolutePath(), 160, 160);
+
+                lblImagem.setIcon(new ImageIcon(imagem));
+
+            } catch (Exception ex) {
+               // System.out.println(ex.printStackTrace().toString());
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Voce nao selecionou nenhum arquivo.");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -243,7 +378,18 @@ public class FaceDetection extends javax.swing.JFrame {
     private javax.swing.JButton btn_startCapture;
     private javax.swing.JButton btn_stopCapture;
     private javax.swing.JButton btn_takePicture;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel lblImagem;
     private javax.swing.JPanel panelPhoto;
+    private javax.swing.JTextField txtcpf;
+    private javax.swing.JTextField txtemail;
+    private javax.swing.JTextField txtnome;
+    private javax.swing.JTextField txttelefone;
     // End of variables declaration//GEN-END:variables
 }

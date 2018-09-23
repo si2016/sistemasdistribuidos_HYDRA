@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Models;
+package br.com.si2016.models;
 
 /**
  *
@@ -11,5 +11,13 @@ package Models;
  */
 public class Usuario extends Pessoa
 {
-    
+    private byte[] imagem; 
+
+    public byte[] getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
+    }
 }
